@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+
+  hipache:
+    build: .
+    links:
+      - redis
+    ports:
+      - 80:80
+
+  redis:
+    image: redis
+
+  airfield:
+    build:
+      context: .
+      dockerfile: Dockerfile-airfield
+    links:
+      - redis
+    environment:
+      AIRFIELD_USER: username
+      AIRFIELD_PASS: password
+    ports:
+      - 3000:3000
