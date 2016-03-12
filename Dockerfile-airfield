@@ -1,3 +1,0 @@
-from    dhrp/airfield
-
-copy airfield_settings.js /airfield/settings.js

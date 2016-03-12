@@ -3,19 +3,20 @@ version: '2'
 services:
 
   hipache:
-    build: .
+    image: node
     links:
       - redis
     ports:
       - 80:80
+    volumes:
+      - .:/hipache
+    command: 'bash -c "(cd /hipache && npm install) && mkdir -p /var/log/hipache && /hipache/bin/hipache"'
 
   redis:
     image: redis
 
   airfield:
-    build:
-      context: .
-      dockerfile: Dockerfile-airfield
+    build: ./airfield
     links:
       - redis
     environment:
