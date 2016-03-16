@@ -82,6 +82,13 @@ version you installed):
             "honorCipherOrder": true
         },
         "driver": "redis:",
+        "injections": [
+            {
+                "query": "#main",
+                "type": "start",
+                "content": "This text will be injected on the beginning of the element with id 'main'"
+            }
+        ],
         "user": "www-data",
         "group": "www-data"
     }
@@ -138,6 +145,8 @@ version you installed):
       preferences instead of the client preferences. Defaults to `true`.
  * __driver__: driver URL to connect to for dynamic VHOST configurations. See
    [drivers section](#drivers) for more information. Defaults to `redis:`.
+ * __injections__: optional array with content modification to make in every response proxyed by hipache. See
+   [content injection section](#content-injection) for more information. By default no content modification is made.
  * __user__: if starting as `root` (which you might do if you want to use a
    privileged port), will drop root privileges as soon as it's bound. Defaults
    to `www-data`. Note that you MUST specify a user if you start Hipache as
@@ -352,6 +361,56 @@ Even though Hipache support passive health checks, it's also possible to run
 active health checks. This mechanism requires to run an external program (see
 third-party softwares below).
 
+### Content Injection
+
+Hipache allows the injection of content into the responses it routes.
+As an example, you can easily add an analytics script to all the pages
+served through it.
+
+You can use most css query selectors (those supported by [trumpet](https://github.com/substack/node-trumpet#selector-syntax)) to define where a content modification should happen and hipache supports the following types of injections:
+
+* start: Adds the `content` to the beginning of the element(s)
+* end: Adds the `content` to the end of the element(s)
+* replace: Replaces the `content` of the element(s)
+* replaceOuter: Replaces the element(s) as a whole (tag and attributes included) for the `content`
+* setAttribute: Defines or overrides an `attribute` of the element(s) to a certain `value`
+* removeAttribute: Removes the `attribute` from the element(s), if present
+
+This is most likely easier to understand with a sample of all the multiple injections posssible. Note that hipache allows you to apply multiple content modifications to the same elements, and will apply them by the declared order.
+
+    "injections": [
+        {
+            "type": "start",
+            "query": "body",
+            "content": "This will be injected into the beginning of the body"
+        },
+        {
+            "type": "end",
+            "query": "head",
+            "content": "<script>alert('I was injected');</script>"
+        },
+        {
+            "type": "replace",
+            "query": "#footer",
+            "content": "This will replace the content of the element with id footer"
+        },
+        {
+            "type": "replaceOuter",
+            "query": "#main div",
+            "content": "<div class='warning'>This replaces all divs inside 'main'</div>"
+        },
+        {
+            "type": "setAttribute",
+            "query": "#my-header",
+            "attribute": "class",
+            "value": "header-info"
+        },
+        {
+            "type": "removeAttribute",
+            "query": "*",
+            "attribute": "style"
+        }
+    ]
 
 Contributing
 ------------
