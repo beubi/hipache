@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+
+  hipache:
+    image: node
+    links:
+      - redis
+    ports:
+      - 80:80
+    volumes:
+      - .:/hipache
+    command: 'bash -c "(cd /hipache && npm install) && mkdir -p /var/log/hipache && /hipache/bin/hipache"'
+
+  redis:
+    image: redis
+
+  airfield:
+    build: ./airfield
+    links:
+      - redis
+    environment:
+      AIRFIELD_USER: username
+      AIRFIELD_PASS: password
+    ports:
+      - 3000:3000
