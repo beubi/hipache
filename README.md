@@ -63,7 +63,6 @@ version you installed):
             "accessLog": "/var/log/hipache/access.log",
             "httpKeepAlive": false,
             "deadBackendOn500": true,
-            "addXFwdHeaders": false,
             "checkCertificates": true,
             "staticDir": null
         },
@@ -116,8 +115,6 @@ version you installed):
       Defaults to `false` (disabled).
     * __server.deadBackendOn500__: consider `500` HTTP status code as critical
       error if sets to `true`. Defaults to `true`.
-    * __server.addXFwdHeaders__: includes [X-Forwarded-For](https://en.wikipedia.org/wiki/X-Forwarded-For)
-      headers. Defaults to 'false'.
     * __server.checkCertificates__: whether backend ssl certificates should
       be verified. Set to false to allow backends to use self-signed or
       other invalid certificates. Defaults to 'true'.
